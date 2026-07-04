@@ -1,0 +1,10 @@
+<% content_for :title, "顧客の登録 | 請求書管理システム" %>
+
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><%= link_to "顧客", clients_path %> / 新規登録</p>
+    <h1>顧客の登録</h1>
+  </div>
+</div>
+
+<%= render "form", client: @client %>

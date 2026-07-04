@@ -1,0 +1,19 @@
+<tr class="item-row" data-invoice-items-target="row">
+  <td>
+    <%= f.text_field :description, class: "input", placeholder: "例）Webサイト保守費用" %>
+  </td>
+  <td class="num">
+    <%= f.number_field :quantity, step: "0.01", min: 0, class: "input num",
+          data: { action: "input->invoice-items#recalculate" } %>
+  </td>
+  <td class="num">
+    <%= f.number_field :unit_price, min: 0, class: "input num",
+          data: { action: "input->invoice-items#recalculate" } %>
+  </td>
+  <td class="num item-amount">¥0</td>
+  <td class="col-remove">
+    <%= f.hidden_field :id %>
+    <%= f.hidden_field :_destroy %>
+    <button type="button" class="btn btn-sm btn-danger-ghost" data-action="invoice-items#remove" title="行を削除">✕</button>
+  </td>
+</tr>

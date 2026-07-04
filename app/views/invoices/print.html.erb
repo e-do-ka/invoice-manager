@@ -1,0 +1,86 @@
+<% content_for :title, "請求書 #{@invoice.invoice_number}" %>
+
+<div class="print-toolbar">
+  <button onclick="window.print()" class="btn btn-primary">🖨 印刷 / PDFに保存</button>
+  <%= link_to "← 詳細に戻る", invoice_path(@invoice), class: "btn btn-ghost" %>
+</div>
+
+<div class="invoice-sheet">
+  <header class="sheet-header">
+    <h1>請 求 書</h1>
+    <div class="sheet-meta">
+      <p>請求書番号：<%= @invoice.invoice_number %></p>
+      <p>発行日：<%= l @invoice.issue_date, format: :long %></p>
+    </div>
+  </header>
+
+  <div class="sheet-parties">
+    <div class="sheet-client">
+      <p class="client-name"><%= @invoice.client.name %> 御中</p>
+      <% if @invoice.client.contact_name.present? %>
+        <p><%= @invoice.client.contact_name %> 様</p>
+      <% end %>
+      <% if @invoice.client.address.present? %>
+        <p class="small">
+          <% if @invoice.client.postal_code.present? %>〒<%= @invoice.client.postal_code %><br><% end %>
+          <%= @invoice.client.address %>
+        </p>
+      <% end %>
+    </div>
+    <div class="sheet-company">
+      <p class="company-name"><%= @company.name %></p>
+      <p class="small">
+        <% if @company.postal_code.present? %>〒<%= @company.postal_code %><br><% end %>
+        <% if @company.address.present? %><%= @company.address %><br><% end %>
+        <% if @company.tel.present? %>TEL: <%= @company.tel %><br><% end %>
+        <% if @company.email.present? %><%= @company.email %><br><% end %>
+        <% if @company.registration_number.present? %>登録番号: <%= @company.registration_number %><% end %>
+      </p>
+    </div>
+  </div>
+
+  <p class="sheet-greeting">下記の通りご請求申し上げます。</p>
+
+  <div class="sheet-total-box">
+    <span>ご請求金額（税込）</span>
+    <strong><%= yen(@invoice.total_amount) %></strong>
+  </div>
+  <p class="sheet-due">お支払期限：<%= l @invoice.due_date, format: :long %></p>
+
+  <table class="sheet-table">
+    <thead>
+      <tr><th>品目・内容</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th></tr>
+    </thead>
+    <tbody>
+      <% @invoice.invoice_items.each do |item| %>
+        <tr>
+          <td><%= item.description %></td>
+          <td class="num"><%= item.quantity.to_s.sub(/\.0+\z/, "") %></td>
+          <td class="num"><%= yen(item.unit_price) %></td>
+          <td class="num"><%= yen(item.amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <table class="sheet-totals">
+    <tr><th>小計（<%= @invoice.tax_rate %>%対象）</th><td class="num"><%= yen(@invoice.subtotal) %></td></tr>
+    <tr><th>消費税（<%= @invoice.tax_rate %>%）</th><td class="num"><%= yen(@invoice.tax_amount) %></td></tr>
+    <tr class="grand"><th>合計</th><td class="num"><%= yen(@invoice.total_amount) %></td></tr>
+  </table>
+
+  <% if @company.bank_info.present? %>
+    <div class="sheet-bank">
+      <h3>お振込先</h3>
+      <%= simple_format @company.bank_info %>
+      <p class="small">※ 恐れ入りますが、振込手数料は貴社にてご負担願います。</p>
+    </div>
+  <% end %>
+
+  <% if @invoice.notes.present? %>
+    <div class="sheet-notes">
+      <h3>備考</h3>
+      <%= simple_format @invoice.notes %>
+    </div>
+  <% end %>
+</div>

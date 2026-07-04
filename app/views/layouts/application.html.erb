@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title><%= content_for(:title) || "請求書管理システム" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-icon">📄</span>
+          <span class="brand-name">請求書管理</span>
+        </div>
+        <nav class="nav">
+          <%= link_to root_path, class: "nav-link #{'active' if current_page?(root_path)}" do %>
+            <span class="nav-icon">📊</span> ダッシュボード
+          <% end %>
+          <%= link_to invoices_path, class: "nav-link #{'active' if request.path.start_with?('/invoices')}" do %>
+            <span class="nav-icon">🧾</span> 請求書
+          <% end %>
+          <%= link_to clients_path, class: "nav-link #{'active' if request.path.start_with?('/clients')}" do %>
+            <span class="nav-icon">🏢</span> 顧客
+          <% end %>
+          <%= link_to edit_company_setting_path, class: "nav-link #{'active' if request.path.start_with?('/company_setting')}" do %>
+            <span class="nav-icon">⚙️</span> 自社情報
+          <% end %>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <% if notice %>
+          <div class="flash flash-notice"><%= notice %></div>
+        <% end %>
+        <% if alert %>
+          <div class="flash flash-alert"><%= alert %></div>
+        <% end %>
+
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

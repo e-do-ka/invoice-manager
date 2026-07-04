@@ -1,0 +1,65 @@
+<% content_for :title, "#{@client.name} | 請求書管理システム" %>
+
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><%= link_to "顧客", clients_path %> / <%= @client.name %></p>
+    <h1><%= @client.name %></h1>
+  </div>
+  <div class="header-actions">
+    <%= link_to "この顧客に請求書を作成", new_invoice_path, class: "btn btn-primary" %>
+    <%= link_to "編集", edit_client_path(@client), class: "btn" %>
+    <%= button_to "削除", @client, method: :delete, class: "btn btn-danger",
+          form: { data: { turbo_confirm: "顧客「#{@client.name}」を削除しますか？" } } %>
+  </div>
+</div>
+
+<div class="detail-columns">
+  <div class="card">
+    <h2>顧客情報</h2>
+    <dl class="detail-list">
+      <dt>担当者</dt><dd><%= @client.contact_name.presence || "—" %></dd>
+      <dt>メールアドレス</dt><dd><%= @client.email.presence || "—" %></dd>
+      <dt>住所</dt>
+      <dd>
+        <% if @client.postal_code.present? %>〒<%= @client.postal_code %><br><% end %>
+        <%= @client.address.presence || "—" %>
+      </dd>
+      <% if @client.notes.present? %>
+        <dt>メモ</dt><dd><%= simple_format @client.notes %></dd>
+      <% end %>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h2>取引サマリー</h2>
+    <dl class="detail-list">
+      <dt>請求書数</dt><dd><%= @invoices.size %>件</dd>
+      <dt>累計請求額（税込）</dt><dd class="num"><%= yen(@invoices.reject(&:draft?).sum(&:total_amount)) %></dd>
+      <dt>未入金額</dt><dd class="num"><%= yen(@invoices.select(&:sent?).sum(&:total_amount)) %></dd>
+    </dl>
+  </div>
+</div>
+
+<div class="card">
+  <h2>請求書履歴</h2>
+  <% if @invoices.any? %>
+    <table class="table">
+      <thead>
+        <tr><th>請求書番号</th><th>発行日</th><th>お支払期限</th><th class="num">金額</th><th>ステータス</th></tr>
+      </thead>
+      <tbody>
+        <% @invoices.each do |invoice| %>
+          <tr>
+            <td><%= link_to invoice.invoice_number, invoice %></td>
+            <td><%= l invoice.issue_date %></td>
+            <td class="<%= 'text-danger' if invoice.overdue? %>"><%= l invoice.due_date %></td>
+            <td class="num"><%= yen(invoice.total_amount) %></td>
+            <td><%= status_badge(invoice) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="empty">この顧客の請求書はまだありません。</p>
+  <% end %>
+</div>

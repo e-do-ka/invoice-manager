@@ -1,0 +1,68 @@
+<% content_for :title, "#{@invoice.invoice_number} | 請求書管理システム" %>
+
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><%= link_to "請求書", invoices_path %> / <%= @invoice.invoice_number %></p>
+    <h1><%= @invoice.invoice_number %> <%= status_badge(@invoice) %></h1>
+  </div>
+  <div class="header-actions">
+    <% if @invoice.draft? %>
+      <%= button_to "送付済にする", update_status_invoice_path(@invoice, to: "sent"), method: :patch, class: "btn btn-primary" %>
+    <% elsif @invoice.sent? %>
+      <%= button_to "入金済にする", update_status_invoice_path(@invoice, to: "paid"), method: :patch, class: "btn btn-success" %>
+    <% end %>
+    <%= link_to "🖨 印刷 / PDF", print_invoice_path(@invoice), target: "_blank", class: "btn" %>
+    <%= link_to "編集", edit_invoice_path(@invoice), class: "btn" %>
+    <%= button_to "削除", @invoice, method: :delete, class: "btn btn-danger",
+          form: { data: { turbo_confirm: "請求書 #{@invoice.invoice_number} を削除しますか？" } } %>
+  </div>
+</div>
+
+<div class="detail-columns">
+  <div class="card">
+    <h2>基本情報</h2>
+    <dl class="detail-list">
+      <dt>顧客</dt><dd><%= link_to @invoice.client.name, @invoice.client %></dd>
+      <dt>発行日</dt><dd><%= l @invoice.issue_date %></dd>
+      <dt>お支払期限</dt>
+      <dd class="<%= 'text-danger' if @invoice.overdue? %>">
+        <%= l @invoice.due_date %>
+        <% if @invoice.overdue? %>（<%= (Date.current - @invoice.due_date).to_i %>日超過）<% end %>
+      </dd>
+      <% if @invoice.paid_on %>
+        <dt>入金日</dt><dd><%= l @invoice.paid_on %></dd>
+      <% end %>
+      <% if @invoice.notes.present? %>
+        <dt>備考</dt><dd><%= simple_format @invoice.notes %></dd>
+      <% end %>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h2>金額</h2>
+    <dl class="detail-list">
+      <dt>小計</dt><dd class="num"><%= yen(@invoice.subtotal) %></dd>
+      <dt>消費税（<%= @invoice.tax_rate %>%）</dt><dd class="num"><%= yen(@invoice.tax_amount) %></dd>
+      <dt class="total-label">合計</dt><dd class="num total-value"><%= yen(@invoice.total_amount) %></dd>
+    </dl>
+  </div>
+</div>
+
+<div class="card">
+  <h2>明細</h2>
+  <table class="table">
+    <thead>
+      <tr><th>品目・内容</th><th class="num">数量</th><th class="num">単価</th><th class="num">金額</th></tr>
+    </thead>
+    <tbody>
+      <% @invoice.invoice_items.each do |item| %>
+        <tr>
+          <td><%= item.description %></td>
+          <td class="num"><%= item.quantity.to_s.sub(/\.0+\z/, "") %></td>
+          <td class="num"><%= yen(item.unit_price) %></td>
+          <td class="num"><%= yen(item.amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

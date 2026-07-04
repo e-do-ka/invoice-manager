@@ -1,0 +1,57 @@
+<% content_for :title, "自社情報 | 請求書管理システム" %>
+
+<div class="page-header">
+  <h1>自社情報</h1>
+</div>
+
+<p class="page-description">請求書の発行者欄・振込先に印字される情報です。</p>
+
+<%= form_with model: @company_setting, url: company_setting_path, method: :patch, class: "form" do |f| %>
+  <% if @company_setting.errors.any? %>
+    <div class="form-errors">
+      <ul>
+        <% @company_setting.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="form-grid">
+      <div class="form-field">
+        <%= f.label :name %>
+        <%= f.text_field :name, class: "input" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :registration_number %>
+        <%= f.text_field :registration_number, class: "input", placeholder: "例）T1234567890123" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :postal_code %>
+        <%= f.text_field :postal_code, class: "input" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :tel %>
+        <%= f.text_field :tel, class: "input" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :email %>
+        <%= f.email_field :email, class: "input" %>
+      </div>
+    </div>
+    <div class="form-field">
+      <%= f.label :address %>
+      <%= f.text_field :address, class: "input" %>
+    </div>
+    <div class="form-field">
+      <%= f.label :bank_info %>
+      <%= f.text_area :bank_info, rows: 3, class: "input",
+            placeholder: "例）〇〇銀行 △△支店 普通 1234567 カ）サンプル" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "保存する", class: "btn btn-primary" %>
+  </div>
+<% end %>

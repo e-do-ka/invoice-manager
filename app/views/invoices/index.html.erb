@@ -1,0 +1,55 @@
+<% content_for :title, "請求書一覧 | 請求書管理システム" %>
+
+<div class="page-header">
+  <h1>請求書</h1>
+  <%= link_to "＋ 請求書を作成", new_invoice_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <%= form_with url: invoices_path, method: :get, class: "filter-form" do |f| %>
+    <%= f.text_field :q, value: params[:q], placeholder: "請求書番号・顧客名で検索", class: "input" %>
+    <%= f.select :status,
+          options_for_select([["すべてのステータス", ""], ["下書き", "draft"], ["送付済", "sent"], ["入金済", "paid"]], params[:status]),
+          {}, class: "input" %>
+    <%= f.select :client_id,
+          options_for_select([["すべての顧客", ""]] + @clients.map { |c| [c.name, c.id] }, params[:client_id]),
+          {}, class: "input" %>
+    <%= f.submit "絞り込む", class: "btn" %>
+    <%= link_to "クリア", invoices_path, class: "btn btn-ghost" %>
+  <% end %>
+
+  <% if @invoices.any? %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>請求書番号</th>
+          <th>顧客</th>
+          <th>発行日</th>
+          <th>お支払期限</th>
+          <th class="num">金額（税込）</th>
+          <th>ステータス</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @invoices.each do |invoice| %>
+          <tr>
+            <td><%= link_to invoice.invoice_number, invoice %></td>
+            <td><%= invoice.client.name %></td>
+            <td><%= l invoice.issue_date %></td>
+            <td class="<%= 'text-danger' if invoice.overdue? %>"><%= l invoice.due_date %></td>
+            <td class="num"><%= yen(invoice.total_amount) %></td>
+            <td><%= status_badge(invoice) %></td>
+            <td class="row-actions">
+              <%= link_to "詳細", invoice, class: "btn btn-sm btn-ghost" %>
+              <%= link_to "印刷", print_invoice_path(invoice), target: "_blank", class: "btn btn-sm btn-ghost" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p class="table-summary">合計 <%= @invoices.size %>件 / <%= yen(@invoices.sum(&:total_amount)) %></p>
+  <% else %>
+    <p class="empty">条件に一致する請求書がありません。</p>
+  <% end %>
+</div>

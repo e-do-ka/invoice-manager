@@ -1,0 +1,393 @@
+/*
+ *= require_tree .
+ *= require_self
+ */
+
+:root {
+  --bg: #f1f4f9;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --sidebar-bg: #1e293b;
+  --sidebar-text: #cbd5e1;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic", Meiryo, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---- レイアウト ---- */
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  padding: 20px 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px;
+  padding: 4px 12px 20px;
+}
+
+.nav { display: flex; flex-direction: column; gap: 4px; }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--sidebar-text);
+  font-weight: 500;
+}
+.nav-link:hover { background: rgba(255, 255, 255, 0.08); text-decoration: none; }
+.nav-link.active { background: var(--primary); color: #fff; }
+
+.main {
+  flex: 1;
+  padding: 28px 36px 60px;
+  max-width: 1160px;
+}
+
+/* ---- 見出し・フラッシュ ---- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.page-header h1 { margin: 0; font-size: 24px; }
+.page-description { margin-top: -8px; color: var(--text-muted); }
+.breadcrumb { margin: 0 0 4px; font-size: 13px; color: var(--text-muted); }
+.header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.flash {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+.flash-notice { background: #dcfce7; color: #166534; }
+.flash-alert { background: #fee2e2; color: #991b1b; }
+
+/* ---- カード ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.card h2 { margin: 0 0 14px; font-size: 16px; }
+.card-danger { border-color: #fecaca; background: #fff7f7; }
+
+.dashboard-columns, .detail-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .dashboard-columns, .detail-columns { grid-template-columns: 1fr; }
+}
+
+/* ---- 統計カード ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+.stat-label { font-size: 13px; color: var(--text-muted); }
+.stat-value { font-size: 26px; font-weight: 700; margin-top: 4px; }
+.stat-warning { color: var(--warning); }
+.stat-danger { color: var(--danger); }
+.stat-success { color: var(--success); }
+
+/* ---- 棒グラフ ---- */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 200px;
+  padding-top: 24px;
+}
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.bar {
+  width: 70%;
+  min-height: 2px;
+  background: linear-gradient(180deg, #6366f1, #4f46e5);
+  border-radius: 6px 6px 0 0;
+}
+.bar-amount { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; white-space: nowrap; }
+.bar-label { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+/* ---- テーブル ---- */
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+.table thead th {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  background: #f8fafc;
+}
+.table tbody tr:hover { background: #f8fafc; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.table-summary { text-align: right; color: var(--text-muted); font-size: 13px; margin: 10px 0 0; }
+.row-actions { text-align: right; white-space: nowrap; }
+.text-danger { color: var(--danger); font-weight: 600; }
+.empty { color: var(--text-muted); padding: 12px 0; }
+
+/* ---- バッジ ---- */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.badge-draft { background: #e2e8f0; color: #475569; }
+.badge-sent { background: #dbeafe; color: #1d4ed8; }
+.badge-paid { background: #dcfce7; color: #15803d; }
+.badge-overdue { background: #fee2e2; color: #b91c1c; }
+
+/* ---- ボタン ---- */
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.btn:hover { background: #f8fafc; text-decoration: none; }
+.btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-success { background: var(--success); border-color: var(--success); color: #fff; }
+.btn-success:hover { background: #15803d; }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-ghost { border-color: transparent; background: transparent; color: var(--primary); }
+.btn-sm { padding: 4px 10px; font-size: 13px; }
+.btn-danger-ghost { border-color: transparent; background: transparent; color: var(--danger); }
+.header-actions form { display: inline; }
+
+/* ---- フォーム ---- */
+.input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text);
+}
+.input:focus { outline: 2px solid #c7d2fe; border-color: var(--primary); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.form-field { margin-bottom: 14px; }
+.form-grid .form-field { margin-bottom: 0; }
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+}
+.form-actions { display: flex; gap: 10px; margin-top: 4px; }
+
+.form-errors {
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.form-errors ul { margin: 0; padding-left: 20px; }
+
+.filter-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.filter-form .input { width: auto; min-width: 180px; }
+
+/* ---- 明細フォーム ---- */
+.items-table .input.num { text-align: right; }
+.items-table .col-qty { width: 100px; }
+.items-table .col-price { width: 140px; }
+.items-table .col-amount { width: 120px; }
+.items-table .col-remove { width: 44px; text-align: center; }
+.item-amount { font-variant-numeric: tabular-nums; color: var(--text-muted); }
+
+.form-totals {
+  margin-top: 16px;
+  margin-left: auto;
+  width: 280px;
+  font-size: 14px;
+}
+.form-totals > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.form-totals .grand { font-size: 17px; font-weight: 700; border-bottom: none; }
+
+/* ---- 詳細画面 ---- */
+.detail-list { display: grid; grid-template-columns: 140px 1fr; gap: 8px 16px; margin: 0; }
+.detail-list dt { color: var(--text-muted); font-size: 13px; padding-top: 2px; }
+.detail-list dd { margin: 0; }
+.detail-list .total-label { font-weight: 700; color: var(--text); }
+.detail-list .total-value { font-size: 20px; font-weight: 700; }
+
+/* ---- 印刷用請求書 ---- */
+.print-body { background: #e2e8f0; }
+
+.print-toolbar {
+  max-width: 800px;
+  margin: 20px auto 0;
+  display: flex;
+  gap: 10px;
+}
+
+.invoice-sheet {
+  background: #fff;
+  max-width: 800px;
+  margin: 16px auto 40px;
+  padding: 48px 56px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  color: #111;
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 3px solid #111;
+  padding-bottom: 8px;
+}
+.sheet-header h1 { margin: 0; font-size: 30px; letter-spacing: 12px; }
+.sheet-meta { text-align: right; font-size: 13px; }
+.sheet-meta p { margin: 2px 0; }
+
+.sheet-parties {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 24px;
+}
+.sheet-client .client-name {
+  font-size: 19px;
+  font-weight: 700;
+  border-bottom: 1px solid #111;
+  padding-bottom: 4px;
+  margin: 0 0 6px;
+}
+.sheet-client p, .sheet-company p { margin: 2px 0; }
+.sheet-company { text-align: left; min-width: 260px; }
+.sheet-company .company-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.small { font-size: 12px; color: #333; }
+
+.sheet-greeting { margin: 24px 0 12px; }
+
+.sheet-total-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid #111;
+  padding: 10px 20px;
+  max-width: 420px;
+}
+.sheet-total-box strong { font-size: 26px; }
+.sheet-due { font-size: 13px; margin: 8px 0 24px; }
+
+.sheet-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.sheet-table th, .sheet-table td { border: 1px solid #94a3b8; padding: 8px 12px; }
+.sheet-table thead th { background: #f1f5f9; font-weight: 600; }
+
+.sheet-totals {
+  margin-left: auto;
+  margin-top: 12px;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 300px;
+}
+.sheet-totals th, .sheet-totals td { border: 1px solid #94a3b8; padding: 6px 12px; }
+.sheet-totals th { background: #f1f5f9; text-align: left; font-weight: 600; }
+.sheet-totals .grand th, .sheet-totals .grand td { font-size: 16px; font-weight: 700; }
+
+.sheet-bank, .sheet-notes {
+  margin-top: 28px;
+  border: 1px solid #94a3b8;
+  padding: 12px 16px;
+  font-size: 13px;
+}
+.sheet-bank h3, .sheet-notes h3 { margin: 0 0 6px; font-size: 13px; }
+.sheet-bank p, .sheet-notes p { margin: 2px 0; }
+
+@media print {
+  .print-body { background: #fff; }
+  .print-toolbar { display: none; }
+  .invoice-sheet {
+    box-shadow: none;
+    margin: 0;
+    max-width: none;
+    padding: 24px 8px;
+  }
+}

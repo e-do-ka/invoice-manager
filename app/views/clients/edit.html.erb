@@ -1,0 +1,10 @@
+<% content_for :title, "#{@client.name} の編集 | 請求書管理システム" %>
+
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><%= link_to "顧客", clients_path %> / <%= link_to @client.name, @client %> / 編集</p>
+    <h1><%= @client.name %> の編集</h1>
+  </div>
+</div>
+
+<%= render "form", client: @client %>

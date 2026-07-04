@@ -1,0 +1,10 @@
+<% content_for :title, "#{@invoice.invoice_number} の編集 | 請求書管理システム" %>
+
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><%= link_to "請求書", invoices_path %> / <%= link_to @invoice.invoice_number, @invoice %> / 編集</p>
+    <h1><%= @invoice.invoice_number %> の編集</h1>
+  </div>
+</div>
+
+<%= render "form", invoice: @invoice %>

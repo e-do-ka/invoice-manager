@@ -1,0 +1,38 @@
+<% content_for :title, "顧客一覧 | 請求書管理システム" %>
+
+<div class="page-header">
+  <h1>顧客</h1>
+  <%= link_to "＋ 顧客を登録", new_client_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <%= form_with url: clients_path, method: :get, class: "filter-form" do |f| %>
+    <%= f.text_field :q, value: params[:q], placeholder: "顧客名・担当者名で検索", class: "input" %>
+    <%= f.submit "検索", class: "btn" %>
+    <%= link_to "クリア", clients_path, class: "btn btn-ghost" %>
+  <% end %>
+
+  <% if @clients.any? %>
+    <table class="table">
+      <thead>
+        <tr><th>顧客名</th><th>担当者</th><th>メールアドレス</th><th class="num">請求書数</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% @clients.each do |client| %>
+          <tr>
+            <td><%= link_to client.name, client %></td>
+            <td><%= client.contact_name %></td>
+            <td><%= client.email %></td>
+            <td class="num"><%= client.invoices.size %></td>
+            <td class="row-actions">
+              <%= link_to "詳細", client, class: "btn btn-sm btn-ghost" %>
+              <%= link_to "編集", edit_client_path(client), class: "btn btn-sm btn-ghost" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="empty">顧客が登録されていません。<%= link_to "最初の顧客を登録", new_client_path %></p>
+  <% end %>
+</div>

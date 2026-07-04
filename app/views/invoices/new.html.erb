@@ -1,0 +1,10 @@
+<% content_for :title, "請求書の作成 | 請求書管理システム" %>
+
+<div class="page-header">
+  <div>
+    <p class="breadcrumb"><%= link_to "請求書", invoices_path %> / 新規作成</p>
+    <h1>請求書の作成</h1>
+  </div>
+</div>
+
+<%= render "form", invoice: @invoice %>

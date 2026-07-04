@@ -1,0 +1,45 @@
+<%= form_with model: client, class: "form" do |f| %>
+  <% if client.errors.any? %>
+    <div class="form-errors">
+      <ul>
+        <% client.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="form-grid">
+      <div class="form-field">
+        <%= f.label :name %>
+        <%= f.text_field :name, class: "input", placeholder: "例）株式会社サンプル商事" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :contact_name %>
+        <%= f.text_field :contact_name, class: "input", placeholder: "例）山田 太郎" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :email %>
+        <%= f.email_field :email, class: "input" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :postal_code %>
+        <%= f.text_field :postal_code, class: "input", placeholder: "例）100-0001" %>
+      </div>
+    </div>
+    <div class="form-field">
+      <%= f.label :address %>
+      <%= f.text_field :address, class: "input" %>
+    </div>
+    <div class="form-field">
+      <%= f.label :notes %>
+      <%= f.text_area :notes, rows: 3, class: "input" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit client.persisted? ? "更新する" : "登録する", class: "btn btn-primary" %>
+    <%= link_to "キャンセル", client.persisted? ? client_path(client) : clients_path, class: "btn btn-ghost" %>
+  </div>
+<% end %>

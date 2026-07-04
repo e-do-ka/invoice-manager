@@ -1,0 +1,86 @@
+<% content_for :title, "ダッシュボード | 請求書管理システム" %>
+
+<div class="page-header">
+  <h1>ダッシュボード</h1>
+  <%= link_to "＋ 請求書を作成", new_invoice_path, class: "btn btn-primary" %>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">今月の売上（発行ベース）</div>
+    <div class="stat-value"><%= yen(@month_sales) %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">未入金額</div>
+    <div class="stat-value stat-warning"><%= yen(@unpaid_total) %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">期限超過</div>
+    <div class="stat-value <%= 'stat-danger' if @overdue_invoices.any? %>"><%= @overdue_invoices.size %>件</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">今月の入金済</div>
+    <div class="stat-value stat-success"><%= @paid_count %>件</div>
+  </div>
+</div>
+
+<% if @overdue_invoices.any? %>
+  <div class="card card-danger">
+    <h2>⚠️ 期限超過の請求書</h2>
+    <table class="table">
+      <thead>
+        <tr><th>請求書番号</th><th>顧客</th><th>お支払期限</th><th class="num">金額</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% @overdue_invoices.each do |invoice| %>
+          <tr>
+            <td><%= link_to invoice.invoice_number, invoice %></td>
+            <td><%= invoice.client.name %></td>
+            <td class="text-danger"><%= l invoice.due_date %>（<%= (Date.current - invoice.due_date).to_i %>日超過）</td>
+            <td class="num"><%= yen(invoice.total_amount) %></td>
+            <td><%= button_to "入金済にする", update_status_invoice_path(invoice, to: "paid"), method: :patch, class: "btn btn-sm" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<div class="dashboard-columns">
+  <div class="card">
+    <h2>月別売上（直近6ヶ月）</h2>
+    <% max = [@monthly_sales.map(&:last).max, 1].max %>
+    <div class="bar-chart">
+      <% @monthly_sales.each do |month, amount| %>
+        <div class="bar-col">
+          <div class="bar-amount"><%= amount.zero? ? "" : yen(amount) %></div>
+          <div class="bar" style="height: <%= (amount.to_f / max * 100).round %>%"></div>
+          <div class="bar-label"><%= month.strftime("%-m月") %></div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>最近の請求書</h2>
+    <% if @recent_invoices.any? %>
+      <table class="table">
+        <thead>
+          <tr><th>請求書番号</th><th>顧客</th><th class="num">金額</th><th>ステータス</th></tr>
+        </thead>
+        <tbody>
+          <% @recent_invoices.each do |invoice| %>
+            <tr>
+              <td><%= link_to invoice.invoice_number, invoice %></td>
+              <td><%= invoice.client.name %></td>
+              <td class="num"><%= yen(invoice.total_amount) %></td>
+              <td><%= status_badge(invoice) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="empty">まだ請求書がありません。<%= link_to "最初の請求書を作成", new_invoice_path %></p>
+    <% end %>
+  </div>
+</div>

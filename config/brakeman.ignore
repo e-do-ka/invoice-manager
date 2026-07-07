@@ -1,0 +1,16 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 122,
+      "fingerprint": "21ab0fe00fdd5899ffc405cff75aadb91b805ee996a614f7e27b08a287e9062d",
+      "check_name": "EOLRails",
+      "message": "Support for Rails 7.2.3.1 ends on 2026-08-09",
+      "file": "Gemfile.lock",
+      "line": 181,
+      "confidence": "Weak",
+      "note": "Rails 7.2系のサポート期限接近の情報通知。フレームワークの更新は別途対応するため、脆弱性検出ではないこの警告でCIを止めない。"
+    }
+  ],
+  "brakeman_version": "8.0.5"
+}

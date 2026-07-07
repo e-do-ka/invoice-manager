@@ -4,6 +4,7 @@
 顧客管理から請求書の発行・送付・入金管理までを一元管理し、
 インボイス制度（適格請求書）の記載要件に対応した請求書を出力できます。
 
+![CI](https://github.com/e-do-ka/invoice-manager/actions/workflows/ci.yml/badge.svg)
 ![Ruby](https://img.shields.io/badge/Ruby-3.3-red)
 ![Rails](https://img.shields.io/badge/Rails-7.2-CC0000)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)

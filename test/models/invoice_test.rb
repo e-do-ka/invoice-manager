@@ -3,6 +3,10 @@ require "test_helper"
 # 各テストの No は docs/テストパターン.md の表と対応している。
 class InvoiceTest < ActiveSupport::TestCase
   setup do
+    # 時刻を固定する。固定しないと、下の build_invoice の既定の支払期限
+    # （2026-07-31）を実時間が追い越した時点で「期限超過」に変わり、
+    # コードを一切変えていないのに No.10 が落ちる。
+    travel_to Date.new(2026, 7, 15)
     @client = Client.create!(name: "テスト商事")
   end
 

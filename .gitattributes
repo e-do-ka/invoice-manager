@@ -1,5 +1,23 @@
 # See https://git-scm.com/docs/gitattributes for more about git attribute files.
 
+# 改行コードを LF に固定する。
+#
+# Windows で checkout すると core.autocrlf の既定動作により bin/* が CRLF になり、
+# シバンが "#!/usr/bin/env ruby\r" と解釈される。その結果 Linux コンテナ内で
+#   env: 'ruby\r': No such file or directory
+# となり bin/rails / bin/rake などが一切実行できなくなる。
+* text=auto eol=lf
+
+# バイナリは変換の対象外にする
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+
 # Mark the database schema as having been generated.
 db/schema.rb linguist-generated
 
